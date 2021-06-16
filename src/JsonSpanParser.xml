@@ -1,0 +1,207 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>JsonSpanParser</name>
+    </assembly>
+    <members>
+        <member name="T:JsonSpanParser.JArrayNode">
+            <summary>
+            an internal object describing a  json-array. Use JSpan for parsing
+            </summary>
+        </member>
+        <member name="T:JsonSpanParser.JObjectNode">
+            <summary>
+            an internal object describing a  json-object. Use JSpan for parsing
+            </summary>
+        </member>
+        <member name="T:JsonSpanParser.JSpan">
+            <summary>
+            Allows to parse
+            </summary>
+        </member>
+        <member name="P:JsonSpanParser.JSpan.IsEmpty">
+            <summary>
+            false if Source(jsonCharSpan) is empty, otherwise true
+            </summary>
+        </member>
+        <member name="P:JsonSpanParser.JSpan.IsArray">
+            <summary>
+            true if JSpan includes json array, otherwise false.
+            you can get the value by index
+            </summary>
+        </member>
+        <member name="P:JsonSpanParser.JSpan.IsObject">
+            <summary>
+            true if JSpan includes json object, otherwise false.
+            you can get the value by key
+            </summary>
+        </member>
+        <member name="P:JsonSpanParser.JSpan.IsValue">
+            <summary>
+            true if JSpan includes any value, otherwise false.
+            you can get the value by ToString method
+            </summary>
+        </member>
+        <member name="M:JsonSpanParser.JSpan.Parse(System.ReadOnlySpan{System.Char},JsonSpanParser.IMemoryContext)">
+            <summary>
+            Use to parse
+            </summary>
+            <param name="jsonCharSpan">span incudes json object as json-string</param>
+            <param name="context">required memory access</param>
+            <returns>an object similar in functionality to a JObject from Newtonsoft.Json.Linq</returns>
+            <exception cref="T:System.InvalidOperationException">throws if jsonCharSpan include wrong json</exception>
+        </member>
+        <member name="P:JsonSpanParser.JSpan.Item(System.ReadOnlySpan{System.Char})">
+            <summary>
+            if JSpan is json object use this method to get value by key,
+            if JSpan not an json object, then the method will return an empty JSpan 
+            </summary>
+            <param name="key">key</param>
+            <returns>value or empty JSpan if the key is not found</returns>
+        </member>
+        <member name="P:JsonSpanParser.JSpan.Item(System.Int32)">
+            <summary>
+            if JSpan is json array use this method to get value by index,
+            if JSpan not an json array, then the method will return an empty JSpan 
+            </summary>
+            <param name="indx">index</param>
+            <returns>value or empty JSpan if the key is not found</returns>
+        </member>
+        <member name="M:JsonSpanParser.JSpan.GetEnumerator">
+            <summary>
+            allows you to get an enumerator of the array contained in the JSpan 
+            </summary>
+            <returns>by default if JSpan does not contain an array</returns>
+        </member>
+        <member name="M:JsonSpanParser.JSpan.ToString">
+            <summary>
+            use to get the value contained in the JSpan
+            </summary>
+            <returns>value or empty string</returns>
+        </member>
+        <member name="M:JsonSpanParser.JSpan.AsJsonString">
+            <summary>
+            use to get the value contained in the JSpan in json form
+            (with opening and closing elements defining the json object)
+            </summary>
+            <returns>value or empty string</returns>
+        </member>
+        <member name="M:JsonSpanParser.JSpan.Deserialize``1">
+            <summary>
+            use to deserialize
+            </summary>
+            <typeparam name="T">the type to which the JSpan(json object) will be deserialized</typeparam>
+            <returns>object ot T-default value</returns>
+        </member>
+        <member name="T:JsonSpanParser.JSpanEnumerator">
+            <summary>
+            an object that provides access to a json-array, similar to an IEnumerator
+            </summary>
+        </member>
+        <member name="M:JsonSpanParser.JSpanEnumerator.MoveNext">
+            <summary>
+            assigns the Сurrent to the next element of the enumerator 
+            </summary>
+            <returns>true, if there are objects in the enumerator</returns>
+        </member>
+        <member name="M:JsonSpanParser.JSpanEnumerator.MovePrevious">
+            <summary>
+            similar to MoveNext, 
+            allows you to iterate over objects from the last to the first
+            </summary>
+            <returns>true, if there are objects in the enumerator</returns>
+        </member>
+        <member name="M:JsonSpanParser.JSpanEnumerator.Last">
+            <summary>
+            allows you to get the last element of the enumeration 
+            </summary>
+            <returns>default if enumeration is empty</returns>
+        </member>
+        <member name="M:JsonSpanParser.JSpanEnumerator.First">
+            <summary>
+            allows you to get the first element of the enumeration 
+            </summary>
+            <returns>default if enumeration is empty</returns>
+        </member>
+        <member name="M:JsonSpanParser.JSpanEnumerator.Count">
+            <summary>
+            allows you to get the length of the enumeration
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:JsonSpanParser.JSpanEnumerator.ResetToFirst">
+            <summary>
+            moves the iterator to the first item. 
+            </summary>
+        </member>
+        <member name="M:JsonSpanParser.JSpanEnumerator.ResetToLast">
+            <summary>
+            moves the iterator to the last item. 
+            Use before using the MovePrevious
+            </summary>
+        </member>
+        <member name="P:JsonSpanParser.JSpanEnumerator.Current">
+            <summary>
+            contains the current enumeration object or default of JSpan
+            </summary>
+        </member>
+        <member name="T:JsonSpanParser.MemoryContext">
+            <summary>
+            basic IMemoryContext implementation
+            </summary>
+        </member>
+        <member name="P:JsonSpanParser.MemoryContext.ObjectRefMemory">
+            <summary>
+            memory access for storing objects
+            </summary>
+        </member>
+        <member name="P:JsonSpanParser.MemoryContext.ArrayRefMemory">
+            <summary>
+            memory access for storing objects
+            </summary>
+        </member>
+        <member name="M:JsonSpanParser.MemoryContext.Release">
+            <summary>
+            in this implementation allows you to overwrite memory 
+            without utilizing it and not allocating new
+            </summary>
+        </member>
+        <member name="T:JsonSpanParser.IMemoryHolder`1">
+            <summary>
+            implements the necessary memory access
+            </summary>
+            <typeparam name="T">the type to be located in memory is used in IMemoryContext</typeparam>
+        </member>
+        <member name="M:JsonSpanParser.IMemoryHolder`1.GetByRef(System.Int32)">
+            <summary>
+            Allows you to get an object from memory by reference 
+            </summary>
+            <param name="indx">reference</param>
+            <returns>object or default</returns>
+            <exception cref="T:System.IndexOutOfRangeException">When indx less then zero or bigger then length</exception>
+        </member>
+        <member name="M:JsonSpanParser.IMemoryHolder`1.Add(`0)">
+            <summary>
+            Allows to write an object into memory and get a reference to it 
+            </summary>
+            <param name="value">object</param>
+            <returns>reference</returns>
+        </member>
+        <member name="T:JsonSpanParser.IMemoryContext">
+            <summary>
+            implement at your discretion to provide unmanaged memory for the parser to run without allocations, 
+            or use ready-made MemoryContext class 
+            </summary>
+        </member>
+        <member name="P:JsonSpanParser.IMemoryContext.ObjectRefMemory">
+            <summary>
+            implements the necessary memory access for storing objects
+            </summary>
+        </member>
+        <member name="P:JsonSpanParser.IMemoryContext.ArrayRefMemory">
+            <summary>
+             implements the necessary memory access for storing objects
+            </summary>
+        </member>
+    </members>
+</doc>
