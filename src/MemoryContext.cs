@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SpanParser
+﻿namespace SpanParser
 {
     namespace Json
     {
