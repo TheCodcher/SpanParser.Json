@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Text.Json;
+using System.Runtime.InteropServices;
 
 namespace SpanParser
 {
@@ -163,6 +164,21 @@ namespace SpanParser
                 else
                     return string.Empty;
             }
+
+            /// <summary>
+            /// use to get the value contained in the JSpan
+            /// </summary>
+            /// <returns>value or empty span</returns>
+            public ReadOnlySpan<char> ToSpan()
+            {
+                if (GetValue(out var startIndx, out var endIndx))
+                {
+                    return SourceSet[(startIndx + 1)..endIndx];
+                }
+                else
+                    return ReadOnlySpan<char>.Empty;
+            }
+
             /// <summary>
             /// use to get the value contained in the JSpan in json form
             /// (with opening and closing elements defining the json object)
@@ -177,6 +193,22 @@ namespace SpanParser
                 else
                     return string.Empty;
             }
+
+            /// <summary>
+            /// use to get the value contained in the JSpan in json form
+            /// (with opening and closing elements defining the json object)
+            /// </summary>
+            /// <returns>value or empty span</returns>
+            public ReadOnlySpan<char> AsJsonSpan()
+            {
+                if (GetValue(out var startIndx, out var endIndx))
+                {
+                    return SourceSet[startIndx..(endIndx + 1)];
+                }
+                else
+                    return ReadOnlySpan<char>.Empty;
+            }
+
             /// <summary>
             /// use to deserialize
             /// </summary>
@@ -194,6 +226,28 @@ namespace SpanParser
                 }
                 else
                     return default;
+            }
+            /// <summary>
+            /// JSpans are compared by values and by references to included ReadOnlySpan of char and IJsonMemoryContext
+            /// </summary>
+            public static bool operator ==(JSpan item1, JSpan item2)
+            {
+                return
+                    item1.MemoryContext == item2.MemoryContext &&
+                    item1.Object.Equality(item2.Object) &&
+                    item1.Array.Equality(item2.Array) &&
+                    item1.SourceSet == item2.SourceSet;
+            }
+            /// <summary>
+            /// JSpans are compared by values and by references to included ReadOnlySpan of char and IJsonMemoryContext
+            /// </summary>
+            public static bool operator !=(JSpan item1, JSpan item2)
+            {
+                return
+                    item1.MemoryContext != item2.MemoryContext ||
+                    !item1.Object.Equality(item2.Object) ||
+                    !item1.Array.Equality(item2.Array) ||
+                    item1.SourceSet != item2.SourceSet;
             }
         }
     }

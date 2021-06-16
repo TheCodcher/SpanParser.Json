@@ -14,6 +14,39 @@
             an internal object describing a  json-object. Use JSpan for parsing
             </summary>
         </member>
+        <member name="T:SpanParser.Json.JsonMemoryContext">
+            <summary>
+            basic IMemoryContext implementation
+            </summary>
+        </member>
+        <member name="P:SpanParser.Json.JsonMemoryContext.ObjectRefMemory">
+            <summary>
+            memory access for storing objects
+            </summary>
+        </member>
+        <member name="P:SpanParser.Json.JsonMemoryContext.ArrayRefMemory">
+            <summary>
+            memory access for storing objects
+            </summary>
+        </member>
+        <member name="M:SpanParser.Json.JsonMemoryContext.Release">
+            <summary>
+            in this implementation allows you to overwrite memory 
+            without utilizing it and not allocating new
+            </summary>
+        </member>
+        <member name="M:SpanParser.Json.JsonMemoryContext.Collect">
+            <summary>
+            in this implementation allows you to release memory
+            and reset buffer to initial state
+            </summary>
+        </member>
+        <member name="M:SpanParser.Json.JsonMemoryContext.Compress">
+            <summary>
+            in this implementation allows you 
+            to сompress the used memory to the filled length 
+            </summary>
+        </member>
         <member name="T:SpanParser.Json.JSpan">
             <summary>
             Allows to parse
@@ -79,6 +112,12 @@
             </summary>
             <returns>value or empty string</returns>
         </member>
+        <member name="M:SpanParser.Json.JSpan.ToSpan">
+            <summary>
+            use to get the value contained in the JSpan
+            </summary>
+            <returns>value or empty span</returns>
+        </member>
         <member name="M:SpanParser.Json.JSpan.AsJsonString">
             <summary>
             use to get the value contained in the JSpan in json form
@@ -86,12 +125,29 @@
             </summary>
             <returns>value or empty string</returns>
         </member>
+        <member name="M:SpanParser.Json.JSpan.AsJsonSpan">
+            <summary>
+            use to get the value contained in the JSpan in json form
+            (with opening and closing elements defining the json object)
+            </summary>
+            <returns>value or empty span</returns>
+        </member>
         <member name="M:SpanParser.Json.JSpan.Deserialize``1">
             <summary>
             use to deserialize
             </summary>
             <typeparam name="T">the type to which the JSpan(json object) will be deserialized</typeparam>
             <returns>object ot T-default value</returns>
+        </member>
+        <member name="M:SpanParser.Json.JSpan.op_Equality(SpanParser.Json.JSpan,SpanParser.Json.JSpan)">
+            <summary>
+            JSpans are compared by values and by references to included ReadOnlySpan of char and IJsonMemoryContext
+            </summary>
+        </member>
+        <member name="M:SpanParser.Json.JSpan.op_Inequality(SpanParser.Json.JSpan,SpanParser.Json.JSpan)">
+            <summary>
+            JSpans are compared by values and by references to included ReadOnlySpan of char and IJsonMemoryContext
+            </summary>
         </member>
         <member name="T:SpanParser.Json.JSpanEnumerator">
             <summary>
@@ -143,27 +199,6 @@
         <member name="P:SpanParser.Json.JSpanEnumerator.Current">
             <summary>
             contains the current enumeration object or default of JSpan
-            </summary>
-        </member>
-        <member name="T:SpanParser.Json.MemoryContext">
-            <summary>
-            basic IMemoryContext implementation
-            </summary>
-        </member>
-        <member name="P:SpanParser.Json.MemoryContext.ObjectRefMemory">
-            <summary>
-            memory access for storing objects
-            </summary>
-        </member>
-        <member name="P:SpanParser.Json.MemoryContext.ArrayRefMemory">
-            <summary>
-            memory access for storing objects
-            </summary>
-        </member>
-        <member name="M:SpanParser.Json.MemoryContext.Release">
-            <summary>
-            in this implementation allows you to overwrite memory 
-            without utilizing it and not allocating new
             </summary>
         </member>
         <member name="T:SpanParser.Json.IJsonMemoryContext">

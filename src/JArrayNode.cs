@@ -29,6 +29,18 @@ namespace SpanParser
 
                 Next = next;
             }
+
+            internal bool Equality(JArrayNode another)
+            {
+                return
+                    ValueType == another.ValueType &&
+                    Value == another.Value &&
+                    ValueStartIndx == another.ValueStartIndx &&
+                    ValueEndIndx == another.ValueEndIndx &
+                    SelfIndex == another.SelfIndex &&
+                    Next == another.Next;
+            }
+
             internal static JArrayNode Parse(ReadOnlySpan<char> source, int startSearchIndx, int selfIndx, IJsonMemoryContext memoryContext, out int memoryIndx, out int endValueIndx)
             {
                 var ValueStartIndx = source.GetSenseSeparatorIndx(startSearchIndx, out var ValueType);

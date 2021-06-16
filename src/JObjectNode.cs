@@ -31,6 +31,18 @@ namespace SpanParser
                 Next = next;
             }
 
+            internal bool Equality(JObjectNode another)
+            {
+                return
+                    ValueType == another.ValueType &&
+                    Value == another.Value &&
+                    ValueStartIndx == another.ValueStartIndx &&
+                    ValueEndIndx == another.ValueEndIndx &&
+                    KeyIndxStart == another.KeyIndxStart &&
+                    KeyIndxEnd == another.KeyIndxEnd &&
+                    Next == another.Next;
+            }
+
             internal static JObjectNode Parse(ReadOnlySpan<char> source, int startSearchIndx, IJsonMemoryContext memoryContext, out int memoryIndx, out int endValueIndx)
             {
                 var KeyIndxStart = source.GetValueSeparatorIndx(startSearchIndx, true);

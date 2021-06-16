@@ -5,7 +5,7 @@
         /// <summary>
         /// basic IMemoryContext implementation
         /// </summary>
-        public class MemoryContext : IJsonMemoryContext
+        public class JsonMemoryContext : IJsonMemoryContext
         {
             /// <summary>
             /// memory access for storing objects
@@ -23,6 +23,25 @@
             {
                 (ObjectRefMemory as PoolArray<JObjectNode>).Release();
                 (ArrayRefMemory as PoolArray<JArrayNode>).Release();
+            }
+            /// <summary>
+            /// in this implementation allows you to release memory
+            /// and reset buffer to initial state
+            /// </summary>
+            public void Collect()
+            {
+                (ObjectRefMemory as PoolArray<JObjectNode>).Clear();
+                (ArrayRefMemory as PoolArray<JArrayNode>).Clear();
+            }
+
+            /// <summary>
+            /// in this implementation allows you 
+            /// to сompress the used memory to the filled length 
+            /// </summary>
+            public void Compress()
+            {
+                (ObjectRefMemory as PoolArray<JObjectNode>).Compress();
+                (ArrayRefMemory as PoolArray<JArrayNode>).Compress();
             }
         }
     }
