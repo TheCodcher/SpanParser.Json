@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
 
-namespace JsonSpanParser
+namespace SpanParser
 {
     internal class PoolArray<T> : IMemoryHolder<T>
         where T : unmanaged

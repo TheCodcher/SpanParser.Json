@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace JsonSpanParser
+namespace SpanParser
 {
     /// <summary>
     /// implements the necessary memory access
@@ -26,19 +26,22 @@ namespace JsonSpanParser
         int Add(T value);
     }
 
-    /// <summary>
-    /// implement at your discretion to provide unmanaged memory for the parser to run without allocations, 
-    /// or use ready-made MemoryContext class 
-    /// </summary>
-    public interface IMemoryContext
+    namespace Json
     {
         /// <summary>
-        /// implements the necessary memory access for storing objects
+        /// implement at your discretion to provide unmanaged memory for the parser to run without allocations, 
+        /// or use ready-made MemoryContext class 
         /// </summary>
-        IMemoryHolder<JObjectNode> ObjectRefMemory { get; }
-        /// <summary>
-        ///  implements the necessary memory access for storing objects
-        /// </summary>
-        IMemoryHolder<JArrayNode> ArrayRefMemory { get; }
+        public interface IJsonMemoryContext
+        {
+            /// <summary>
+            /// implements the necessary memory access for storing objects
+            /// </summary>
+            IMemoryHolder<JObjectNode> ObjectRefMemory { get; }
+            /// <summary>
+            ///  implements the necessary memory access for storing objects
+            /// </summary>
+            IMemoryHolder<JArrayNode> ArrayRefMemory { get; }
+        }
     }
 }

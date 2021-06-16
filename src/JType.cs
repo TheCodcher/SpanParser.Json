@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace JsonSpanParser
+namespace SpanParser
 {
-    internal enum JType : byte
+    namespace Json
     {
-        None = 0,
-        Value,
-        Array,
-        Object
+        internal enum JType : byte
+        {
+            None = 0,
+            Value,
+            Array,
+            Object
+        }
     }
 }
