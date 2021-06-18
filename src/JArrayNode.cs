@@ -49,13 +49,18 @@ namespace SpanParser
                 {
                     var selff = new JArrayNode(JType.None, -1, 0, 0, 0, -1);
                     endValueIndx = source.GetSeparatorIndx(startSearchIndx, JSONSetup.ARRAY.Close);
-                    if (endValueIndx == -1) throw new InvalidOperationException("wrongJson");
+                    if (endValueIndx == -1) 
+                        throw new InvalidOperationException("wrongJson");
                     memoryIndx = memoryContext.ArrayRefMemory.Add(selff);
                     return selff;
                 }
                 //"arr":[]
 
-                if (ValueType == JType.None) throw new InvalidOperationException("wrongJson");
+                var asdasda = source[startSearchIndx..];
+
+                if (ValueType == JType.None) 
+                    throw new InvalidOperationException("wrongJson");
+
 
                 var Next = -1;
                 var Value = -1;
@@ -73,6 +78,11 @@ namespace SpanParser
                 if (ValueType == JType.Value)
                 {
                     ValueEndIndx = source.GetValueSeparatorIndx(ValueStartIndx + 1);
+                }
+
+                if (ValueType == JType.Material)
+                {
+                    ValueEndIndx = source.GetMaterialValueEndIndx(ValueStartIndx);
                 }
 
                 if (source.HasNextSense(ValueEndIndx + 1, out var tempIndx))

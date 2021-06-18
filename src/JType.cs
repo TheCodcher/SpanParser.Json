@@ -7,7 +7,8 @@
             None = 0,
             Value,
             Array,
-            Object
+            Object,
+            Material
         }
     }
 }

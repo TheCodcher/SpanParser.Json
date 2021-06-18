@@ -10,7 +10,11 @@ namespace SpanParser
         /// <summary>
         /// Allows to parse
         /// </summary>
+#pragma warning disable CS0660 // Тип определяет оператор == или оператор !=, но не переопределяет Object.Equals(object o)
+#pragma warning disable CS0661 // Тип определяет оператор == или оператор !=, но не переопределяет Object.GetHashCode()
         public readonly ref struct JSpan
+#pragma warning restore CS0661 // Тип определяет оператор == или оператор !=, но не переопределяет Object.GetHashCode()
+#pragma warning restore CS0660 // Тип определяет оператор == или оператор !=, но не переопределяет Object.Equals(object o)
         {
             private readonly ReadOnlySpan<char> SourceSet;
             private readonly IJsonMemoryContext MemoryContext;
@@ -21,26 +25,40 @@ namespace SpanParser
             /// <summary>
             /// false if Source(jsonCharSpan) is empty, otherwise true
             /// </summary>
-            public bool IsEmpty => !(IsArray || IsObject || IsValue) || SourceSet.IsEmpty;
+            public bool IsEmpty => Array.ValueType == JType.None && Object.ValueType == JType.None || SourceSet.IsEmpty;
             /// <summary>
             /// true if JSpan includes json array, otherwise false.
             /// you can get the value by index
             /// </summary>
-            public bool IsArray => Array.ValueType != JType.None;
+            public bool IsArray =>
+                Array.ValueType == JType.Array ||
+                Object.ValueType == JType.Array;
             /// <summary>
             /// true if JSpan includes json object, otherwise false.
             /// you can get the value by key
             /// </summary>
-            public bool IsObject => Object.ValueType != JType.None;
+            public bool IsObject =>
+                Array.ValueType == JType.Object ||
+                Object.ValueType == JType.Object;
 
             /// <summary>
             /// true if JSpan includes any value, otherwise false.
             /// you can get the value by ToString method
             /// </summary>
             public bool IsValue =>
-                IsArray && Array.ValueType == JType.Value ||
-                IsObject && Object.ValueType == JType.Value;
+                Array.ValueType == JType.Value ||
+                Object.ValueType == JType.Value;
 
+            /// <summary>
+            /// true if JSpan includes true, false, null or digit, otherwise false.
+            /// you can get the value by ToString or AsJsonString method
+            /// </summary>
+            public bool IsMaterial =>
+                Array.ValueType == JType.Material ||
+                Object.ValueType == JType.Material;
+
+            private bool ObjectHasValue => Object.ValueType != JType.None;
+            private bool ArrayHasValue => Array.ValueType != JType.None;
 
             internal JSpan(ReadOnlySpan<char> jsonCharSpan, IJsonMemoryContext context)
             {
@@ -92,8 +110,8 @@ namespace SpanParser
 
             private JSpan FindByKey(ReadOnlySpan<char> key)
             {
-                if (!(Array.ValueType == JType.Object || Object.ValueType == JType.Object)) return default;
-                var valueRef = IsObject ? Object.Value : Array.Value;
+                if (!IsObject) return default;
+                var valueRef = ObjectHasValue ? Object.Value : Array.Value;
                 var workflow = MemoryContext.ObjectRefMemory.GetByRef(valueRef);
                 if (workflow.GetByKey(key, SourceSet, MemoryContext.ObjectRefMemory, out var obj))
                 {
@@ -112,8 +130,8 @@ namespace SpanParser
 
             private JSpan FindByObjectIndex(int indx)
             {
-                if (!(Array.ValueType == JType.Array || Object.ValueType == JType.Array)) return default;
-                var valueRef = IsObject ? Object.Value : Array.Value;
+                if (!IsArray) return default;
+                var valueRef = ObjectHasValue ? Object.Value : Array.Value;
                 var workflow = MemoryContext.ArrayRefMemory.GetByRef(valueRef);
                 if (workflow.GetByIndex(indx, MemoryContext.ArrayRefMemory, out var obj))
                 {
@@ -128,19 +146,20 @@ namespace SpanParser
             /// <returns>by default if JSpan does not contain an array</returns>
             public JSpanEnumerator GetEnumerator()
             {
-                if (!(Array.ValueType == JType.Array || Object.ValueType == JType.Array)) return default;
+                if (!IsArray) 
+                    return default;
                 return new JSpanEnumerator(this);
             }
 
             private bool GetValue(out int startIndx, out int endIndx)
             {
-                if (IsArray)
+                if (ArrayHasValue)
                 {
                     startIndx = Array.ValueStartIndx;
                     endIndx = Array.ValueEndIndx;
                     return true;
                 }
-                if (IsObject)
+                if (ObjectHasValue)
                 {
                     startIndx = Object.ValueStartIndx;
                     endIndx = Object.ValueEndIndx;
@@ -159,10 +178,61 @@ namespace SpanParser
             {
                 if (GetValue(out var startIndx, out var endIndx))
                 {
-                    return new string(SourceSet[(startIndx + 1)..endIndx]);
+                    if (IsMaterial)
+                    {
+                        endIndx++;
+                    }
+                    else
+                    {
+                        startIndx++;
+                    }
+
+                    var builder = new StringBuilder(endIndx - startIndx);
+                    int indx = startIndx;
+                    while (indx < endIndx)
+                    {
+                        var found = SourceSet[indx..endIndx].IndexOf('\\');
+
+                        if (found == -1)
+                        {
+                            builder.Append(SourceSet[indx..endIndx]);
+                            break;
+                        }
+                        else
+                        {
+                            found += indx;
+                            builder.Append(SourceSet[indx..found]);
+                            var tempChar = GetBackslashConstruction(ref found, SourceSet);
+                            builder.Append(tempChar);
+                            indx = found + 1;
+                        }
+                    }
+
+                    return builder.ToString();
                 }
-                else
-                    return string.Empty;
+                return string.Empty;
+            }
+
+            private char GetBackslashConstruction(ref int indx, ReadOnlySpan<char> source)
+            {
+                indx++;
+                var nextSymb = source[indx];
+                switch (nextSymb)
+                {
+                    case 'a': return '\a';
+                    case 'b': return '\b';
+                    case 'r': return '\r';
+                    case 'n': return '\n';
+                    case 't': return '\t';
+                    case 'f': return '\f';
+                    case 'u':
+                        indx++;
+                        var res = (char)int.Parse(source[indx..(indx + 4)], System.Globalization.NumberStyles.HexNumber);
+                        indx += 3;
+                        return res;
+                    case '\\': return '\\';
+                    default: return nextSymb;
+                }
             }
 
             /// <summary>
@@ -171,6 +241,7 @@ namespace SpanParser
             /// <returns>value or empty span</returns>
             public ReadOnlySpan<char> ToSpan()
             {
+                if (IsMaterial) return AsJsonSpan();
                 if (GetValue(out var startIndx, out var endIndx))
                 {
                     return SourceSet[(startIndx + 1)..endIndx];
@@ -216,10 +287,10 @@ namespace SpanParser
             /// <returns>object ot T-default value</returns>
             public T Deserialize<T>()
             {
-                if (GetValue(out var startIndx, out var endIndx))
+                var set = AsJsonSpan();
+                if (!set.IsEmpty)
                 {
                     var encoding = Encoding.UTF8;
-                    var set = SourceSet[startIndx..endIndx];
                     Span<byte> buffer = stackalloc byte[encoding.GetByteCount(set)];
                     encoding.GetBytes(set, buffer);
                     return JsonSerializer.Deserialize<T>(buffer);
@@ -227,6 +298,7 @@ namespace SpanParser
                 else
                     return default;
             }
+
             /// <summary>
             /// JSpans are compared by values and by references to included ReadOnlySpan of char and IJsonMemoryContext
             /// </summary>

@@ -50,7 +50,8 @@ namespace SpanParser
                 {
                     var selff = new JObjectNode(JType.None, -1, 0, 0, 0, 0, -1);
                     endValueIndx = source.GetSeparatorIndx(startSearchIndx, JSONSetup.OBJECT.Close);
-                    if (endValueIndx == -1) throw new InvalidOperationException("wrongJson");
+                    if (endValueIndx == -1) 
+                        throw new InvalidOperationException("wrongJson");
                     memoryIndx = memoryContext.ObjectRefMemory.Add(selff);
                     return selff;
                 }
@@ -60,12 +61,16 @@ namespace SpanParser
                 }
                 var KeyIndxEnd = source.GetValueSeparatorIndx(KeyIndxStart);
 
-                if (KeyIndxEnd == -1) throw new InvalidOperationException("wrongJson");
+                var asdasda = source[startSearchIndx..];
+
+                if (KeyIndxEnd == -1) 
+                    throw new InvalidOperationException("wrongJson");
 
                 var tempIndx = source.GetSeparatorIndx(KeyIndxEnd + 1, JSONSetup.BETWEN_KEY_AND_SENSE);
                 var ValueStartIndx = source.GetSenseSeparatorIndx(tempIndx + 1, out var ValueType);
 
-                if (ValueType == JType.None) throw new InvalidOperationException("wrongJson");
+                if (ValueType == JType.None) 
+                    throw new InvalidOperationException("wrongJson");
 
                 var Next = -1;
                 var Value = -1;
@@ -83,6 +88,10 @@ namespace SpanParser
                 if (ValueType == JType.Value)
                 {
                     ValueEndIndx = source.GetValueSeparatorIndx(ValueStartIndx + 1);
+                }
+                if (ValueType == JType.Material)
+                {
+                    ValueEndIndx = source.GetMaterialValueEndIndx(ValueStartIndx);
                 }
 
                 if (source.HasNextSense(ValueEndIndx + 1, out tempIndx))

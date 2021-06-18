@@ -75,6 +75,12 @@
             you can get the value by ToString method
             </summary>
         </member>
+        <member name="P:SpanParser.Json.JSpan.IsMaterial">
+            <summary>
+            true if JSpan includes true, false, null or digit, otherwise false.
+            you can get the value by ToString or AsJsonString method
+            </summary>
+        </member>
         <member name="M:SpanParser.Json.JSpan.Parse(System.ReadOnlySpan{System.Char},SpanParser.Json.IJsonMemoryContext)">
             <summary>
             Use to parse
