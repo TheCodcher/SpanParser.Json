@@ -51,7 +51,7 @@ namespace SpanParser
                     var selff = new JObjectNode(JType.None, -1, 0, 0, 0, 0, -1);
                     endValueIndx = source.GetSeparatorIndx(startSearchIndx, JSONSetup.OBJECT.Close);
                     if (endValueIndx == -1) 
-                        throw new InvalidOperationException("wrongJson");
+                        throw new WrongJsonException($"Since {startSearchIndx} symbol expected to find a {JSONSetup.OBJECT.Close}, but no json symbol was found earlier");
                     memoryIndx = memoryContext.ObjectRefMemory.Add(selff);
                     return selff;
                 }
@@ -61,16 +61,14 @@ namespace SpanParser
                 }
                 var KeyIndxEnd = source.GetValueSeparatorIndx(KeyIndxStart);
 
-                var asdasda = source[startSearchIndx..];
-
-                if (KeyIndxEnd == -1) 
-                    throw new InvalidOperationException("wrongJson");
+                if (KeyIndxEnd == -1)
+                    throw new WrongJsonException($"Since {KeyIndxStart} symbol expected to find a {JSONSetup.VALUE_AND_KEY}, but not found");
 
                 var tempIndx = source.GetSeparatorIndx(KeyIndxEnd + 1, JSONSetup.BETWEN_KEY_AND_SENSE);
                 var ValueStartIndx = source.GetSenseSeparatorIndx(tempIndx + 1, out var ValueType);
 
-                if (ValueType == JType.None) 
-                    throw new InvalidOperationException("wrongJson");
+                if (ValueType == JType.None)
+                    throw new WrongJsonException($"Since {tempIndx + 1} symbol expected to find an object, array, value or material, but no json symbol was found earlier");
 
                 var Next = -1;
                 var Value = -1;
@@ -97,15 +95,18 @@ namespace SpanParser
                 if (source.HasNextSense(ValueEndIndx + 1, out tempIndx))
                 {
                     Parse(source, tempIndx + 1, memoryContext, out Next, out endValueIndx);
+                    if (endValueIndx == -1)
+                    {
+                        throw new WrongJsonException($"Since {tempIndx + 1} symbol next ObjectNode parse did not find the end of its value");
+                    }
                 }
                 else
                 {
                     endValueIndx = ValueEndIndx;
-                }
-
-                if (endValueIndx == -1)
-                {
-                    throw new InvalidOperationException("wrongJson");
+                    if (endValueIndx == -1)
+                    {
+                        throw new WrongJsonException($"Since {ValueStartIndx} symbol did not find the end of its value");
+                    }
                 }
 
                 var self = new JObjectNode(ValueType, Value, KeyIndxStart, KeyIndxEnd, ValueStartIndx, ValueEndIndx, Next);

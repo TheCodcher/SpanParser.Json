@@ -49,17 +49,14 @@ namespace SpanParser
                 {
                     var selff = new JArrayNode(JType.None, -1, 0, 0, 0, -1);
                     endValueIndx = source.GetSeparatorIndx(startSearchIndx, JSONSetup.ARRAY.Close);
-                    if (endValueIndx == -1) 
-                        throw new InvalidOperationException("wrongJson");
+                    if (endValueIndx == -1)
+                        throw new WrongJsonException($"Since {startSearchIndx} symbol expected to find a {JSONSetup.ARRAY.Close}, but no json symbol was found earlier");
                     memoryIndx = memoryContext.ArrayRefMemory.Add(selff);
                     return selff;
                 }
-                //"arr":[]
 
-                var asdasda = source[startSearchIndx..];
-
-                if (ValueType == JType.None) 
-                    throw new InvalidOperationException("wrongJson");
+                if (ValueType == JType.None)
+                    throw new WrongJsonException($"Since {startSearchIndx} symbol expected to find an object, array, value or material, but no json symbol was found earlier");
 
 
                 var Next = -1;
@@ -88,15 +85,18 @@ namespace SpanParser
                 if (source.HasNextSense(ValueEndIndx + 1, out var tempIndx))
                 {
                     Parse(source, tempIndx + 1, selfIndx + 1, memoryContext, out Next, out endValueIndx);
+                    if (endValueIndx == -1)
+                    {
+                        throw new WrongJsonException($"Since {tempIndx + 1} symbol next ArrayNode parse did not find the end of its value");
+                    }
                 }
                 else
                 {
                     endValueIndx = source.GetSeparatorIndx(ValueEndIndx + 1, JSONSetup.ARRAY.Close);
-                }
-
-                if (endValueIndx == -1)
-                {
-                    throw new InvalidOperationException("wrongJson");
+                    if (endValueIndx == -1)
+                    {
+                        throw new WrongJsonException($"Since {ValueEndIndx + 1} symbol expected to find a {JSONSetup.ARRAY.Close}, but no json symbol was found earlier");
+                    }
                 }
 
                 var self = new JArrayNode(ValueType, Value, selfIndx, ValueStartIndx, ValueEndIndx, Next);
