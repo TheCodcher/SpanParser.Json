@@ -114,15 +114,15 @@
         </member>
         <member name="M:SpanParser.Json.JSpan.ToString">
             <summary>
-            use to get the value contained in the JSpan
+            use to get the value contained in the JSpan or contained json
             </summary>
-            <returns>value or empty string</returns>
+            <returns>value, json or empty string</returns>
         </member>
         <member name="M:SpanParser.Json.JSpan.ToSpan">
             <summary>
-            use to get the value contained in the JSpan
+            use to get the value contained in the JSpan or contained json
             </summary>
-            <returns>value or empty span</returns>
+            <returns>value, json or empty span</returns>
         </member>
         <member name="M:SpanParser.Json.JSpan.AsJsonString">
             <summary>

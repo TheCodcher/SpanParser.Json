@@ -171,21 +171,15 @@ namespace SpanParser
             }
 
             /// <summary>
-            /// use to get the value contained in the JSpan
+            /// use to get the value contained in the JSpan or contained json
             /// </summary>
-            /// <returns>value or empty string</returns>
+            /// <returns>value, json or empty string</returns>
             public override string ToString()
             {
+                if (IsMaterial || !IsValue) return AsJsonString();
                 if (GetValue(out var startIndx, out var endIndx))
                 {
-                    if (IsMaterial)
-                    {
-                        endIndx++;
-                    }
-                    else
-                    {
-                        startIndx++;
-                    }
+                    startIndx++;
 
                     var builder = new StringBuilder(endIndx - startIndx);
                     int indx = startIndx;
@@ -236,12 +230,12 @@ namespace SpanParser
             }
 
             /// <summary>
-            /// use to get the value contained in the JSpan
+            /// use to get the value contained in the JSpan or contained json
             /// </summary>
-            /// <returns>value or empty span</returns>
+            /// <returns>value, json or empty span</returns>
             public ReadOnlySpan<char> ToSpan()
             {
-                if (IsMaterial) return AsJsonSpan();
+                if (IsMaterial || !IsValue) return AsJsonSpan();
                 if (GetValue(out var startIndx, out var endIndx))
                 {
                     return SourceSet[(startIndx + 1)..endIndx];
