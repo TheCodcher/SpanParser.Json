@@ -8,7 +8,7 @@
     <Authors>TheCodcher</Authors>
     <Company>TheCodcher</Company>
     <Description>The library allows to parse Json text presented as ReadOnlySpan &lt;char&gt;. This allows avoiding excessive allocation for strings and objects processing them with large volumes of parsing. api is similar to Newtonsoft.Json.Linq, except that this library also provides object pulling capability. Thus, it is possible to use parsing without heap allocations at all, which greatly improves performance. It should be noted that the implementation of the above functionality is not ideal, and it is possible to increase performance by optimizing the algorithms used.</Description>
-    <Version>0.9.3</Version>
+    <Version>0.9.3.2</Version>
     <RepositoryUrl>https://github.com/TheCodcher/SpanParser.Json</RepositoryUrl>
     <PackageReleaseNotes>important parse fixes</PackageReleaseNotes>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>

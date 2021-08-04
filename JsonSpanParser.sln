@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.31229.75
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonSpanParser", "src\JsonSpanParser.csproj", "{EB9305AD-2E1E-40C6-976F-B2E73E0F847D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonSpanParserTests", "Tests\JsonSpanParserTests\JsonSpanParserTests.csproj", "{D1D53E5C-CDEA-4661-A118-EC4CD2EC9532}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonSpanParserTests", "Tests\JsonSpanParserTests\JsonSpanParserTests.csproj", "{D1D53E5C-CDEA-4661-A118-EC4CD2EC9532}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
