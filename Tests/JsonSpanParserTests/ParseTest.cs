@@ -8,12 +8,15 @@ namespace JsonSpanParserTests
     public class ParseTest
     {
         JsonMemoryContext context;
+
+        const string FilePath = "";
+
         char[] json;
         [SetUp]
         public void Setup()
         {
             context = new JsonMemoryContext();
-            json = File.ReadAllText(@"C:\Users\Molni\source\repos\JsonSpanParser\Tests\message.json").ToCharArray();
+            json = File.ReadAllText(FilePath).ToCharArray();
         }
 
         [Test]
