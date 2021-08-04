@@ -15,7 +15,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>C:\Users\Molni\source\repos\JsonSpanParser\src\JsonSpanParser.xml</DocumentationFile>
+    <DocumentationFile>..\src\JsonSpanParser.xml</DocumentationFile>
   </PropertyGroup>
 
 </Project>
