@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonSpanParser", "src\JsonS
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonSpanParserTests", "Tests\JsonSpanParserTests\JsonSpanParserTests.csproj", "{D1D53E5C-CDEA-4661-A118-EC4CD2EC9532}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonSpanParserBenchmark", "Benchmark\JsonSpanParserBenchmark.csproj", "{08D30F50-524F-4CFA-80C6-11B6D1CC446B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{D1D53E5C-CDEA-4661-A118-EC4CD2EC9532}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D1D53E5C-CDEA-4661-A118-EC4CD2EC9532}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D1D53E5C-CDEA-4661-A118-EC4CD2EC9532}.Release|Any CPU.Build.0 = Release|Any CPU
+		{08D30F50-524F-4CFA-80C6-11B6D1CC446B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08D30F50-524F-4CFA-80C6-11B6D1CC446B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08D30F50-524F-4CFA-80C6-11B6D1CC446B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08D30F50-524F-4CFA-80C6-11B6D1CC446B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
