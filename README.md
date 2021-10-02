@@ -87,8 +87,8 @@ IJsonMemoryContext context = new JsonMemoryContext();
 const string json = "{ \"ArrayKey\": [ \"first\", \"second\" ], \"ValueKey\": 1.23 }";
 
 JSpan parseStruct = JSpan.Parse(json, context);
-string toStringJson = parseStruct.ToJsonString(); // "{ "ArrayKey": [ "first", "second" ], "ValueKey": 1.23 }"
-string toString = parseStruct.ToString(); // "{ "ArrayKey": [ "first", "second" ], "ValueKey": 1.23 }"
+string toStringJson = parseStruct.ToJsonString(); // { "ArrayKey": [ "first", "second" ], "ValueKey": 1.23 }
+string toString = parseStruct.ToString(); // { "ArrayKey": [ "first", "second" ], "ValueKey": 1.23 }
 
 JSpan arrayParse = parseStruct["ArrayKey"];
 string toStringArrJson = arrayParse.ToJsonString(); // [ "first", "second" ]
