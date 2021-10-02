@@ -176,7 +176,7 @@ namespace SpanParser
             /// <returns>value, json or empty string</returns>
             public override string ToString()
             {
-                if (IsMaterial || !IsValue) return AsJsonString();
+                if (IsMaterial || !IsValue) return ToJsonString();
                 if (GetValue(out var startIndx, out var endIndx))
                 {
                     startIndx++;
@@ -233,7 +233,7 @@ namespace SpanParser
             /// use to get the value contained in the JSpan or contained json
             /// </summary>
             /// <returns>value, json or empty span</returns>
-            public ReadOnlySpan<char> ToSpan()
+            public ReadOnlySpan<char> AsSpan()
             {
                 if (IsMaterial || !IsValue) return AsJsonSpan();
                 if (GetValue(out var startIndx, out var endIndx))
@@ -249,7 +249,7 @@ namespace SpanParser
             /// (with opening and closing elements defining the json object)
             /// </summary>
             /// <returns>value or empty string</returns>
-            public string AsJsonString()
+            public string ToJsonString()
             {
                 if (GetValue(out var startIndx, out var endIndx))
                 {
